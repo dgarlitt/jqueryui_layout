@@ -1,0 +1,77 @@
+/*** global css ***/
+html {
+	height: 100%;
+	font-size: 62.5%;
+}
+
+body {
+	min-width: 600px;
+	padding: 10px;
+}
+
+strong {
+	font-weight: bold;
+}
+
+select {
+	padding: .3em;
+}
+
+input {
+	padding: .3em;
+}
+
+.oa-content-button {
+	padding: 4px;
+	position: absolute;
+	cursor: pointer;
+	cursor: hand;
+}
+
+#oa-content-container {
+	width: 100%;
+}
+
+#oa-right-menu-container {
+	vertical-align: top;
+	width: 140px;
+	min-width: 140px;
+}
+
+#oa-right-menu {
+	padding: 1em;
+}
+
+.oa-subheading {
+	font-weight: bold;
+	padding-bottom: .5em;
+}
+
+.oa-link-list {
+	margin: 0 0 10px 20px;
+}
+
+.oa-link-list li {
+	line-height: 1.5em;
+	list-style: disc inside none;
+	
+}
+
+/*  hide the "x" button on any dialog
+	with the following dialogClass */
+.hide-dialog-close-button .ui-dialog-titlebar-close {
+    display:none;
+}
+
+/*  replace the previous dialogClass
+	with this one to show the "x"
+	button again */
+.show-dialog-close-button .ui-dialog-titlebar-close {
+    display:inline;
+}
+
+div#page-title {
+	padding: 10px;
+	font-size: 1.5em;
+	margin: 10px 0 20px 0;
+}

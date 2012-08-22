@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Candidate Search</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="/assets/css/reset.css" />
+		<link rel="stylesheet" href="/assets/css/oa-global.css" />
+		<!--
+		<link rel="stylesheet" href="/assets/css/oa-content-section.css" />
+		-->
+		<link rel="stylesheet" href="/assets/css/jquery-ui/themes/jquery-ui.custom.css" />
+		<style type="text/css">
+			#sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
+			.oa-layout-element.oa-column {
+				float: left;
+			}
+			.oa-layout-element.oa-row {
+				overflow: auto;				
+			}
+			.square-block {
+				height: 100px;
+			}
+		</style>
+		<script type="text/javascript" src="/assets/js/jquery/jquery.min.js" /></script>
+		<script type="text/javascript" src="/assets/js/jquery/jquery-ui.custom.min.js" /></script>
+		<script type="text/javascript" src="/assets/js/jquery/plugins/jquery.cookie.js" /></script>
+		<script type="text/javascript" src="/assets/js/jquery/plugins/jquery.oaContentSection.js"></script>
+		<script type="text/javascript">
+			var makeSortable = function() {
+				
+				var addEmptyColumnSpacers = function() {
+					console.log('column spacers');
+					$('.oa-layout-element.oa-column:not(:has(.content-section))').each(function() {
+						$(this).append('<div class="oa-column-spacer">&nbsp;</div>');
+					});
+					$('.oa-layout-element.oa-column(:has(.content-section)) .os-column-spacer').remove();
+				}
+				
+				var adjustColumnWidth = function() {
+					var column = $('.oa-layout-element.oa-column');
+					
+					column.css('width', (100/column.length).toFixed() + '%');
+					console.log($('.oa-layout-element.oa-column:not(:has(.content-section))').length);
+					
+					addEmptyColumnSpacers();
+					/*
+					// remove any empty columns
+					$('.oa-layout-column:not(:has(.content-section))').remove();
+					
+					if ( column.length === 1 ) {
+						column.addClass('oa-layout-row').removeClass('oa-layout-column');
+					} else {
+						column.css('width', (100/column.length).toFixed() + '%');
+					}
+					*/
+				}
+				
+				adjustColumnWidth();
+				
+				$( ".oa-layout-element.oa-column,.oa-layout-element.oa-row" ).sortable({
+					connectWith: '.oa-layout-element.oa-column,.oa-layout-element.oa-row',
+					handle: 'div.oa-content-section-header',
+					cursor: 'move',
+					placeholder: 'ui-state-highlight',
+					forcePlaceholderSize: true,
+					opacity: 0.5,
+					stop: function(event, ui) {
+						var sortorder = '';
+						var column = [];
+						$('.oa-layout-column').each( function(i) {
+							column[i] = $(this).sortable('toArray');
+						});
+					},
+					change: function( event, ui ) {
+						//console.log( $(ui.item).position().left );
+						addEmptyColumnSpacers();
+					},
+					deactivate: function( event, ui ) {
+						adjustColumnWidth();
+					}
+				})
+				.disableSelection();
+			}
+			
+			$(function() {
+				$('.oa-layout-element.oa-container, .oa-layout-element.oa-row').hover( function(e) {
+					$this = $(this);
+					console.log($(this).attr('class').split(' ')[1] + " in");
+				}, function() {
+					$this = $(this);
+					console.log($(this).attr('class').split(' ')[1] + " out");
+				});
+				
+				$( "div.content-section" ).oaContentSection();
+				
+				makeSortable();
+				
+				$('#change-layout a').click(function(e) {
+					e.preventDefault();
+				});
+				
+			});
+		</script>
+	</head>
+	<body>
+		<div id="page-title" class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">Candidate Search</div>
+		<div class="oa-layout-element oa-container">
+		
+			<div class="oa-layout-element oa-row">
+					<div class="content-section" title="Folders" id="folders"><div class="square-block"></div></div>
+					<div class="content-section" title="Reports" id="reports"><div class="square-block"></div></div>
+			</div>
+			
+			<div class="oa-layout-element oa-row">
+				<div class="oa-layout-element oa-column">
+						<div class="content-section" title="Candidates" id="candidates"><div class="square-block"></div></div>
+						<div class="content-section" title="Contacts" id="contacts"><div class="square-block"></div></div>
+						<div class="content-section" title="Companies" id="companies"><div class="square-block"></div></div>
+				</div>
+				
+				<div class="oa-layout-element oa-column">
+						<div class="content-section" title="Orders" id="orders"><div class="square-block"></div></div>
+						<div class="content-section" title="Activities" id="activities"><div class="square-block"></div></div>
+						<div class="content-section" title="Applicants" id="applicants"><div class="square-block"></div></div>
+				</div>
+				
+				<div class="oa-layout-element oa-column">
+						<div class="content-section" title="Work History" id="workhistory"><div class="square-block"></div></div>
+						<div class="content-section" title="Education" id="education"><div class="square-block"></div></div>
+				</div>
+				
+				<div class="oa-layout-element oa-column">
+						<div class="content-section" title="Pay Rates" id="payrates"><div class="square-block"></div></div>
+						<div class="content-section" title="Skills" id="skills"><div class="square-block"></div></div>
+				</div>
+			</div>
+			
+		</div>
+		
+	</body>
+</html>
