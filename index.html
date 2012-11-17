@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jQuery Layout</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link href="/assets/css/reset.css" />
+		<link href="/assets/css/oa-global.css" />
+		<link href="/assets/css/jquery-ui/themes/jquery-ui.custom.css" />
+		<link href="/assets/css/jquery.contextMenu.css" />
+		<style type="text/css">
+			#sortable li {
+				margin: 3px 3px 3px 0;
+				padding: 1px;
+				float: left;
+				width: 100px;
+				height: 90px;
+				font-size: 4em;
+				text-align: center;
+			}
+			
+			.oa-layout-section.oa-column {
+				float: left;
+			}
+			
+			.oa-layout-section.oa-row {
+				margin-top: 1em;
+				overflow: auto;				
+			}
+			
+			.oa-layout-section.edit {
+				box-sizing: border-box;
+				-moz-box-sizing: border-box; /* Firefox */
+				-webkit-box-sizing: border-box; /* Safari */
+				padding: 2em;
+				border: 1px dashed gray;
+				border-radius: 5px;
+			}
+			
+			.square-block {
+				height: 100px;
+			}
+		</style>
+		<script src="/assets/js/jquery/jquery.min.js" /></script>
+		<script src="/assets/js/jquery/jquery-ui.custom.min.js" /></script>
+		<script src="/assets/js/jquery/jquery.ui.position.js" /></script>
+		<script src="/assets/js/jquery/plugins/jquery.cookie.js" /></script>
+		<script src="/assets/js/jquery/plugins/jquery.oaContentSection.js"></script>
+		<script src="/assets/js/jquery/plugins/jquery.contextMenu.js"></script>
+		<script>
+			$(function() {
+				
+				function GridLayout( gridArray, elementType ) {
+					
+					if ( gridArray === undefined ) {
+						gridArray = [];
+					}
+					
+					if ( elementType === undefined ) {
+						elementType = 'div';
+					}
+					
+					this.gridArray = gridArray;
+					this.elementType = elementType;
+					
+					this.init = function() {
+						try {
+							var $main = $(document.createElement(this.elementType))
+											.addClass('oa-layout-section')
+											.addClass('oa-main')
+											.delegate('.oa-row.edit', 'hover', function() {
+												
+											});
+							for ( var row in this.gridArray ) {
+								var $row = $(document.createElement(this.elementType))
+													.addClass('oa-layout-section')
+													.addClass('oa-row');
+													
+								if ( this.gridArray[row] < 1 ) {
+									this.gridArray[row] = 1;
+								}
+													
+								for ( var col = 0; col < this.gridArray[row]; col++ ) {
+									var $col = $(document.createElement(this.elementType))
+													.addClass('oa-layout-section')
+													.addClass('oa-column');
+									
+									$row.append($col);
+								}
+								
+								$main.append($row)
+							}
+							
+							$('body').append($main);
+							
+							this.adjustColumnWidth();
+							
+						} catch(err) {
+							alert('The following error occurred:\n\n' + err.message);
+							return false;
+						}
+						
+						return true;
+					}
+					
+					this.getRowCount = function() {
+						return this.gridArray.length;
+					}
+					
+					this.adjustColumnWidth = function() {
+						$('.oa-row').each(function() {
+							var $col = $(this).find('.oa-layout-section.oa-column');
+						
+							$col.css('width', (100/$col.length).toFixed() + '%');
+						});
+						
+						//addEmptyColumnSpacers();
+					}
+					
+					this.mode = 'view';
+					
+					this.changeMode = function() {
+						if ( this.mode === 'edit' ) {
+							this.mode = 'view';
+							$('body').find('.oa-layout-section').removeClass('edit');
+							
+						} else {
+							this.mode = 'edit';
+							$('body').find('.oa-layout-section').addClass('edit');
+							
+						}
+						
+						return this.mode;
+					}
+					
+					this.init();
+				};
+				
+				var grid = new GridLayout([1,1,4], 'section');
+				
+				$.contextMenu({
+					selector: '.oa-layout-section.oa-main', 
+					callback: function(key, options) {
+						var m = "clicked: " + key;
+						window.console && console.log(m) || alert(m); 
+					},
+					items: {
+						"edit": {name: "Edit", icon: "edit"},
+						"cut": {name: "Cut", icon: "cut"},
+						"copy": {name: "Copy", icon: "copy"},
+						"paste": {name: "Paste", icon: "paste"},
+						"delete": {name: "Delete", icon: "delete"},
+						"sep1": "---------",
+						"quit": {name: "Quit", icon: "quit"}
+					}
+				});
+				
+				$('a#edit-layout').click(function(e) {
+					e.preventDefault();
+					
+					grid.changeMode();
+				});
+			});
+		</script>
+	</head>
+	
+	<body>
+		<a id="edit-layout" href="#">edit layout</a>
+	</body>
+</html>
